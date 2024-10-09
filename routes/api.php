@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\FlashCardController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,3 +19,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::controller(AuthController::class)->group(function () {
+    Route::post('/login', 'login')->name('login');
+    Route::post('/signup', 'store')->name('store');
+});
+
+
+Route::apiResource('collections', CollectionController::class);
+
+Route::apiResource('flashcards', FlashCardController::class);

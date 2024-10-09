@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -16,7 +20,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->sendResponse(false, 422, $validator->errors()->first(), 'Validation Error');
+            return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors()->first(), 'Validation Error');
         }
         // Create new user
         $user = User::create([
@@ -26,7 +30,42 @@ class AuthController extends Controller
         ]);
         $user->assignRole('admin');
 
-        return $this->sendResponse(true, 200, 'User created successfully', $user);
+        return $this->sendResponse(true, Response::HTTP_OK, 'User created successfully', $user);
+
+    }
+
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors()->first(), 'Validation Error');
+        }
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
+        }
+
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        $data = [
+            "user" => $user,
+            "token" => $token,
+        ];
+
+        return $this->sendResponse(true, Response::HTTP_OK, 'Login successfully', $data);
+
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return $this->sendResponse(true, Response::HTTP_OK, 'Logged out successfully');
 
     }
 }
