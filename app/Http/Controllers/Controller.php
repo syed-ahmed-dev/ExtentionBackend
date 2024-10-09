@@ -15,7 +15,7 @@ class Controller extends BaseController
             'status' => $status,
             'code' => $code,
             'message' => $message,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 }
