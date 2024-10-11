@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OtpMail;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -9,12 +10,10 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Validator;
 
 class ForgotPasswordOtpController extends Controller
 {
-    // Step 1: Generate and Send OTP via Email
     public function sendOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [

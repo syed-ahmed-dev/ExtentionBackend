@@ -26,10 +26,9 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login')->name('login');
     Route::post('/signup', 'store')->name('store');
 });
+Route::post('/forgot-password/send-otp', [ForgotPasswordOtpController::class, 'sendOtp']);
+Route::post('/forgot-password/reset', [ForgotPasswordOtpController::class, 'resetPassword']);
 
 Route::apiResource('collections', CollectionController::class);
 
 Route::apiResource('flashcards', FlashCardController::class);
-
-Route::post('/forgot-password/send-otp', [ForgotPasswordOtpController::class, 'sendOtp']);
-Route::post('/forgot-password/reset', [ForgotPasswordOtpController::class, 'resetPassword']);

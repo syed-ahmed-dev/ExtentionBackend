@@ -5,20 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\FlashCard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class FlashCardController extends Controller
 {
-    // Get all flashcards
     public function index()
     {
         $flashcards = FlashCard::all();
         return response()->json($flashcards, Response::HTTP_OK);
     }
 
-    // Store a new flashcard
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'image' => 'required|string|max:255',
             'company' => 'required|string|max:255',
@@ -27,20 +26,22 @@ class FlashCardController extends Controller
             'collection_id' => 'required|exists:collection,id',
         ]);
 
-        $flashcard = FlashCard::create($validated);
+        if ($validator->fails()) {
+            return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors()->first(), 'Validation Error');
+        }
+
+        $flashcard = FlashCard::create($validator);
         return response()->json($flashcard, Response::HTTP_CREATED);
     }
 
-    // Get a specific flashcard
     public function show(FlashCard $flashcard)
     {
         return response()->json($flashcard, Response::HTTP_OK);
     }
 
-    // Update a flashcard
     public function update(Request $request, FlashCard $flashcard)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
             'image' => 'sometimes|required|string|max:255',
             'company' => 'sometimes|required|string|max:255',
@@ -49,11 +50,14 @@ class FlashCardController extends Controller
             'collection_id' => 'sometimes|required|exists:collection,id',
         ]);
 
-        $flashcard->update($validated);
+        if ($validator->fails()) {
+            return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors()->first(), 'Validation Error');
+        }
+
+        $flashcard->update($validator);
         return response()->json($flashcard, Response::HTTP_OK);
     }
 
-    // Delete a flashcard
     public function destroy(FlashCard $flashcard)
     {
         $flashcard->delete();

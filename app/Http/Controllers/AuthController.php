@@ -27,7 +27,7 @@ class AuthController extends Controller
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
         ]);
-        $user->assignRole('admin');
+        $user->assignRole('user');
 
         return $this->sendResponse(true, Response::HTTP_OK, 'User created successfully', $user);
 
