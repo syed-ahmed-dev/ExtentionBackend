@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\FlashCardController;
+use App\Http\Controllers\ForgotPasswordOtpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,6 @@ Route::controller(AuthController::class)->group(function () {
 Route::apiResource('collections', CollectionController::class);
 
 Route::apiResource('flashcards', FlashCardController::class);
+
+Route::post('/forgot-password/send-otp', [ForgotPasswordOtpController::class, 'sendOtp']);
+Route::post('/forgot-password/reset', [ForgotPasswordOtpController::class, 'resetPassword']);

@@ -22,7 +22,6 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors()->first(), 'Validation Error');
         }
-        // Create new user
         $user = User::create([
             'name' => $request['name'],
             'email' => $request['email'],
