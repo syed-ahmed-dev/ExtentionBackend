@@ -71,7 +71,29 @@ class ForgotPasswordOtpController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
         DB::table('password_resets_otp')->where('email', $request->email)->delete();
+        return $this->sendResponse(true, Response::HTTP_OK, 'Password reset successfully.', null);
+    }
 
-        return response()->json(['message' => 'Password reset successfully'], 200);
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+        $userId = auth()->user()->id;
+
+        if ($validator->fails()) {
+            return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors()->first(), 'Validation Error');
+        }
+
+        $user = User::where('id', $userId)->first();
+
+        if (!$user || !Hash::check($request->old_password, $user->password)) {
+            return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, 'Invalid old password.', null);
+        }
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return $this->sendResponse(true, Response::HTTP_OK, 'Password change successfully.', null);
     }
 }

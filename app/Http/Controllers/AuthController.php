@@ -67,4 +67,22 @@ class AuthController extends Controller
         return $this->sendResponse(true, Response::HTTP_OK, 'Logged out successfully');
 
     }
+
+    public function updateProfile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|required|string|max:255',
+        ]);
+
+        $userId = auth()->user()->id;
+        $user = User::where('id', $userId) - first();
+
+        if ($validator->fails()) {
+            return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors()->first(), 'Validation Error');
+        }
+
+        $user->update($validator);
+        return $this->sendResponse(true, Response::HTTP_OK, 'Profile update successfully');
+
+    }
 }

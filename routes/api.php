@@ -32,3 +32,18 @@ Route::post('/forgot-password/reset', [ForgotPasswordOtpController::class, 'rese
 Route::apiResource('collections', CollectionController::class);
 
 Route::apiResource('flashcards', FlashCardController::class);
+
+Route::middleware('auth:sanctum')->group(function () {
+    // Route to get authenticated user details
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Route to change password
+    Route::post('/change/password', [ForgotPasswordOtpController::class, 'changePassword']);
+
+    // Add more API routes with the same middleware
+    Route::post('/update/profile', [AuthController::class, 'updateProfile']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    // You can add as many routes as needed here...
+});

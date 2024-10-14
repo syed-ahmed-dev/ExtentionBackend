@@ -12,7 +12,7 @@ class FlashCardController extends Controller
     public function index()
     {
         $flashcards = FlashCard::all();
-        return response()->json($flashcards, Response::HTTP_OK);
+        return $this->sendResponse(true, Response::HTTP_OK, 'FlashCard list.', $flashcards);
     }
 
     public function store(Request $request)
@@ -31,7 +31,8 @@ class FlashCardController extends Controller
         }
 
         $flashcard = FlashCard::create($validator);
-        return response()->json($flashcard, Response::HTTP_CREATED);
+        return $this->sendResponse(true, Response::HTTP_OK, 'FlashCard create successfully.', $flashcard);
+
     }
 
     public function show(FlashCard $flashcard)
@@ -55,12 +56,13 @@ class FlashCardController extends Controller
         }
 
         $flashcard->update($validator);
-        return response()->json($flashcard, Response::HTTP_OK);
+        return $this->sendResponse(true, Response::HTTP_OK, 'FlashCard update successfully.', $flashcard);
     }
 
     public function destroy(FlashCard $flashcard)
     {
         $flashcard->delete();
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return $this->sendResponse(true, Response::HTTP_NO_CONTENT, 'FlashCard delete successfully.', null);
+
     }
 }
