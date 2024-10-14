@@ -71,6 +71,7 @@ class ForgotPasswordOtpController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
         DB::table('password_resets_otp')->where('email', $request->email)->delete();
+        
         return $this->sendResponse(true, Response::HTTP_OK, 'Password reset successfully.', null);
     }
 

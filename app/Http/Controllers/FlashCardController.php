@@ -37,7 +37,7 @@ class FlashCardController extends Controller
 
     public function show(FlashCard $flashcard)
     {
-        return response()->json($flashcard, Response::HTTP_OK);
+        return $this->sendResponse(true, Response::HTTP_OK, 'FlashCard List.', $flashcard);
     }
 
     public function update(Request $request, FlashCard $flashcard)
@@ -59,10 +59,18 @@ class FlashCardController extends Controller
         return $this->sendResponse(true, Response::HTTP_OK, 'FlashCard update successfully.', $flashcard);
     }
 
-    public function destroy(FlashCard $flashcard)
+    public function destroy(FlashCard $flashcard, $id)
     {
-        $flashcard->delete();
-        return $this->sendResponse(true, Response::HTTP_NO_CONTENT, 'FlashCard delete successfully.', null);
+        $userId = auth()->id();
 
+        $flashcard = FlashCard::with('collection')->find($id);
+
+        if (!$flashcard || $flashcard->collection->user_id !== $userId) {
+            return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, 'Not found or unauthorized.', null);
+        }
+
+        $flashcard->delete();
+        return $this->sendResponse(true, Response::HTTP_NO_CONTENT, 'FlashCard deleted successfully.', null);
     }
+
 }
