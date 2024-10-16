@@ -13,7 +13,6 @@ class CollectionController extends Controller
     {
         $userId = auth()->id();
 
-        // Fetch collections that belong to the authenticated user
         $collections = Collection::where('user_id', $userId)->get();
 
         return $this->sendResponse(true, Response::HTTP_OK, 'Collection List.', $collections);
