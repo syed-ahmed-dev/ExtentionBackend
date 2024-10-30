@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FlashCard;
+use App\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -11,7 +12,9 @@ class FlashCardController extends Controller
 {
     public function index()
     {
-        $flashcards = FlashCard::all();
+        $userId = auth()->user()->id;
+        $collectionIds = Collection::where('user_id', $userId)->pluck('id');
+        $flashcards = FlashCard::whereIn('collection_id', $collectionIds)->get();
         return $this->sendResponse(true, Response::HTTP_OK, 'FlashCard list.', $flashcards);
     }
 
