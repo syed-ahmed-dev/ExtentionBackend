@@ -30,9 +30,7 @@ class AuthController extends Controller
             'password' => Hash::make($request['password']),
         ]);
         $user->assignRole('user');
-
         return $this->sendResponse(true, Response::HTTP_OK, 'User created successfully', $user);
-
     }
 
     public function login(Request $request)
