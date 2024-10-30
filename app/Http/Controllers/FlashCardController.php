@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FlashCard;
 use App\Models\Collection;
+use App\Models\FlashCard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -26,14 +26,14 @@ class FlashCardController extends Controller
             'company' => 'required|string|max:255',
             'title' => 'required|string|max:255',
             'notes' => 'nullable|string',
-            'collection_id' => 'required|exists:collection,id',
+            'collection_id' => 'required|exists:collections,id',
         ]);
 
         if ($validator->fails()) {
             return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors()->first(), 'Validation Error');
         }
 
-        $flashcard = FlashCard::create($validator);
+        $flashcard = FlashCard::create($validator->validated()); // Pass validated data here
         return $this->sendResponse(true, Response::HTTP_OK, 'FlashCard create successfully.', $flashcard);
 
     }
