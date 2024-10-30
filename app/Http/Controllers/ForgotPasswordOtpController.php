@@ -97,4 +97,5 @@ class ForgotPasswordOtpController extends Controller
 
         return $this->sendResponse(true, Response::HTTP_OK, 'Password change successfully.', null);
     }
+    
 }
