@@ -6,6 +6,7 @@ use App\Http\Controllers\FlashCardController;
 use App\Http\Controllers\ForgotPasswordOtpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,13 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
  */
+
+
+ Route::middleware(['auth:api', 'admin'])->group(function () {
+    Route::get('/users', [AdminController::class, 'getUser']);
+    Route::get('/flashcard', [AdminController::class, 'allFlash']);
+    Route::get('/collection', [AdminController::class, 'allCollection']);
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
