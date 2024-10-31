@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Collection;
 use App\Models\FlashCard;
 use App\Models\User;
-use App\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AdminController extends Controller
 {
-    
+
     public function getUser(Request $request)
     {
         $query = User::query();

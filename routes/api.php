@@ -20,7 +20,7 @@ use App\Http\Controllers\AdminController;
  */
 
 
- Route::middleware(['auth:api', 'admin'])->group(function () {
+ Route::prefix('admin')->middleware(['auth:api', 'admin'])->group(function () {
     Route::get('/users', [AdminController::class, 'getUser']);
     Route::get('/flashcard', [AdminController::class, 'allFlash']);
     Route::get('/collection', [AdminController::class, 'allCollection']);
