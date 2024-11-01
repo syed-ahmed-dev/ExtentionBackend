@@ -52,7 +52,7 @@ class FlashCardController extends Controller
             'company' => 'sometimes|required|string|max:255',
             'title' => 'sometimes|required|string|max:255',
             'notes' => 'nullable|string',
-            'collection_id' => 'sometimes|required|exists:collection,id',
+            'collection_id' => 'sometimes|required|exists:collections,id',
         ]);
 
         if ($validator->fails()) {
