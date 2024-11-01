@@ -13,4 +13,11 @@ class Collection extends Model
         'name',
         'user_id',
     ];
+
+    public function flashcards()
+    {
+        return $this->hasMany(Flashcard::class);
+        
+    }
+
 }

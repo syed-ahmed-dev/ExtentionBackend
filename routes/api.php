@@ -24,6 +24,7 @@ use App\Http\Controllers\AdminController;
     Route::get('/users', [AdminController::class, 'getUser']);
     Route::get('/flashcard', [AdminController::class, 'allFlash']);
     Route::get('/collection', [AdminController::class, 'allCollection']);
+    Route::get('/collection/flashcard', [AdminController::class, 'collectionWithFlashcard']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

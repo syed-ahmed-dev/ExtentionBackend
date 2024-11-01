@@ -61,4 +61,37 @@ class AdminController extends Controller
 
     }
 
+    public function collectionWithFlashcard(Request $request)
+    {
+        $query = Collection::with(['flashcards' => function ($q) use ($request) {
+            if ($request->has('name')) {
+                $q->where('name', 'like', '%' . $request->input('name') . '%');
+            }
+
+            if ($request->has('company')) {
+                $q->where('company', 'like', '%' . $request->input('company') . '%');
+            }
+
+            if ($request->has('title')) {
+                $q->where('title', 'like', '%' . $request->input('title') . '%');
+            }
+
+            if ($request->has('notes')) {
+                $q->where('notes', 'like', '%' . $request->input('notes') . '%');
+            }
+        }]);
+
+        if ($request->has('user_id')) {
+            $query->where('user_id', $request->input('user_id'));
+        }
+
+        if ($request->has('collection_name')) {
+            $query->where('name', 'like', '%' . $request->input('collection_name') . '%');
+        }
+
+        $collections = $query->get();
+
+        return $this->sendResponse(true, Response::HTTP_OK, 'Collection List With FlashCards.', $collections);
+    }
+
 }
