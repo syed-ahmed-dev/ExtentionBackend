@@ -41,10 +41,10 @@ return [
             'provider' => 'users',
         ],
         'api' => [
-        'driver' => 'token', // or 'sanctum' if you are using Laravel Sanctum
-        'provider' => 'users',
-        'hash' => false,
-    ],
+            'driver' => 'token',
+            'provider' => 'users',
+            'hash' => false,
+        ],
     ],
 
     /*

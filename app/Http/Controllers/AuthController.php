@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\LoginResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -46,17 +48,26 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return $this->sendResponse(false, Response::HTTP_UNAUTHORIZED, 'Invalid credentials');
         }
 
         $token = $user->createToken('api-token')->plainTextToken;
+        $user->token = $token;
 
-        $data = [
-            "user" => $user,
-            "token" => $token,
-        ];
+        return $this->sendResponse(true, Response::HTTP_OK, 'Login successfully', new LoginResource($user));
 
-        return $this->sendResponse(true, Response::HTTP_OK, 'Login successfully', $data);
+    }
+
+    public function profile(Request $request)
+    {
+        $userId = auth()->user()->id;
+        $user = User::where('id', $userId)->first();
+
+        if (!$user) {
+            return $this->sendResponse(false, Response::HTTP_NOT_FOUND, 'Not Found', null);
+        }
+
+        return $this->sendResponse(true, Response::HTTP_OK, 'User Profile', new UserResource($user));
 
     }
 
@@ -76,7 +87,7 @@ class AuthController extends Controller
         ]);
 
         $userId = auth()->user()->id;
-        $user = User::where('id', $userId) - first();
+        $user = User::where('id', $userId)->first();
 
         if ($validator->fails()) {
             return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors()->first(), 'Validation Error');

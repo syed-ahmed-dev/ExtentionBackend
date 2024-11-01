@@ -7,6 +7,7 @@ use App\Models\FlashCard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\FlashcardsResource;
 
 class FlashCardController extends Controller
 {
@@ -33,7 +34,7 @@ class FlashCardController extends Controller
             return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors()->first(), 'Validation Error');
         }
 
-        $flashcard = FlashCard::create($validator->validated()); // Pass validated data here
+        $flashcard = FlashCard::create($validator->validated());
         return $this->sendResponse(true, Response::HTTP_OK, 'FlashCard create successfully.', $flashcard);
 
     }
@@ -69,7 +70,7 @@ class FlashCardController extends Controller
         $flashcard = FlashCard::with('collection')->find($id);
 
         if (!$flashcard || $flashcard->collection->user_id !== $userId) {
-            return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, 'Not found or unauthorized.', null);
+            return $this->sendResponse(false, Response::HTTP_BAD_REQUEST, 'Not Found Or Unauthorized.', null);
         }
 
         $flashcard->delete();
